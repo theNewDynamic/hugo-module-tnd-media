@@ -1,0 +1,48 @@
+{{/*
+  transform/hugo
+  Will transorm an image using Hugo Image processing from a given list of transforms settings
+
+  @author @regisphilibert
+
+  @context Type (.name)
+
+  @access private
+
+  @returns Type
+
+  @uses
+     - partial
+
+  @logic
+  If we have width and !height > .Resize 
+  If we have height and !width > .Resize
+  If we have height and width and !crop > .Fill
+  If we have height and width and crop > .Fit 
+*/}}
+{{ $resource := "" }}
+
+{{ $options := $.options }}
+{{ $s := newScratch }}
+{{ $s.Set "data" dict }}
+
+{{ $settings := string (partialCached "tnd-media/private/FormatSettings" $.options $.options) }}
+
+{{ $method := partialCached "tnd-media/private/GetTransformMethod" $.options $.options }}
+{{ if eq $method "resize" }}
+  {{ $resource = $.resource.Resize $settings }}
+{{ else if eq $method "fit" }}
+  {{ $resource = $.resource.Fit $settings }}
+{{ else if eq $method "fill" }}
+  {{ $resource = $.resource.Fill $settings }}
+{{ end }}
+
+{{ with $resource }}
+  {{ $s.SetInMap "data" "Permalink" $resource.Permalink }}
+  {{ $s.SetInMap "data" "RelPermalink" $resource.RelPermalink }}
+  {{ $s.SetInMap "data" "Width" $resource.Width }}
+  {{ $s.SetInMap "data" "Height" $resource.Height }}
+  {{ $s.SetInMap "data" "transform" (print "." (humanize $method) " " $settings) }}
+{{ end }}
+
+
+{{ return $s.Get "data" }}

@@ -1,8 +1,8 @@
 This is a template repo. To start.
 
-search `{moduleName}` through the project and replace it with the module identifier (ex: `socials` for `hugo-module-tnd-socials`)
+search `media` through the project and replace it with the module identifier (ex: `socials` for `hugo-module-tnd-socials`)
 
-# {moduleName} Hugo Module
+# media Hugo Module
 
 (intro)
 
@@ -27,7 +27,7 @@ Configure your project's module to import this module:
 # config.yaml
 module:
   imports:
-  - path: github.com/theNewDynamic/hugo-module-tnd-{moduleName}
+  - path: github.com/theNewDynamic/hugo-module-tnd-media
 ```
 
 ## Usage
@@ -38,12 +38,12 @@ module:
 
 ### Settings
 
-Settings are added to the project's parameter under the `tnd_{moduleName}` map as shown below.
+Settings are added to the project's parameter under the `tnd_media` map as shown below.
 
 ```yaml
 # config.yaml
 params:
-  tnd_{moduleName}:
+  tnd_media:
     [...]
 ```
 

@@ -1,0 +1,33 @@
+{{/*
+  GetStorage
+  Retrieves the type of storage used (bundle, assets, static) and returns the type and the relative URL
+
+  @author @regisphilibert
+
+  @context Type (.name)
+
+  @access private
+
+  @returns Type
+
+  @uses
+     - partial
+
+  @example - Go Template
+    {{ with partialCached "GetStorage" context context }}
+      {{ something = . }}
+    {{ end }}
+*/}}
+
+{{ $config := partialCached "tnd-media/private/GetConfig" "GetConfig" }}
+
+{{ $storage := dict 
+  "type" "assets"
+  "path" "/uploads"
+}}
+
+{{ with $config.storage }}
+  {{ $storage = . }}
+{{ end }}
+
+{{ return $storage }}

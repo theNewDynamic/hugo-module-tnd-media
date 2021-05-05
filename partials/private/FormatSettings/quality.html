@@ -1,0 +1,28 @@
+{{/*
+  options/quality
+  Description
+
+  @author @regisphilibert
+
+  @context Type (.name)
+
+  @access private
+
+  @returns Type
+
+  @uses
+     - partial
+
+{{ $args := dict
+"src" "/uploads/something.jpg"
+"quality" "90"
+}} > "q90"
+
+*/}}
+
+{{ $string := "" }}
+{{ with $.quality }}
+  {{ $string = print "q" . }}
+{{ end }}
+
+{{ return $string }}

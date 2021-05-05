@@ -1,0 +1,34 @@
+{{/*
+  GetBundle
+  Retrieve an Page Bundle given an full filepath.
+
+  @author @regisphilibert
+
+  @context String (.)
+
+  @access private
+
+  @returns Page
+
+  @uses
+     - partial
+
+  @example - Go Template
+    {{ with partialCached "GetBundle" context context }}
+      {{ something = . }}
+    {{ end }}
+*/}}
+
+{{ $path := . }}
+{{ $bundle := dict }}
+{{ with $path }}
+  {{ $info := path.Split . }}
+  {{ with $info.Dir }}
+    {{ $bundle_path := trim . "/" }}
+    {{ with site.GetPage $bundle_path }}
+      {{ $bundle = . }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ return $bundle }}

@@ -1,0 +1,54 @@
+{{/*
+  options/dimensions
+
+  @author 
+
+  @context Type (.name)
+
+  @access private
+
+  @example - Go Template
+    {{ partial "path" context }}
+    {{ partialCached "path" context "variant" }}
+
+
+{{ $args := dict
+"src" "/uploads/something.jpg"
+"width" 800
+}} > "800x"
+
+{{ $args := dict
+  "src" "/uploads/something.jpg"
+  "height" 400
+}} > "x400"
+
+{{ $args := dict
+  "src" "/uploads/something.jpg"
+  "width" 800
+  "height" 400
+}} >"800x400"
+
+*/}}
+{{ $string := "" }}
+{{ $width := false }}
+{{ with $.width }}
+  {{ $width = . }}
+{{ end }}
+{{ $height := false }}
+{{ with $.height }}
+  {{ $height = . }}
+{{ end }}
+
+{{ with $width }}
+  {{ $string = print $width "x" }}
+{{ end }}
+
+{{ with $height }}
+  {{ $string = print "x" $height }}
+{{ end }}
+
+{{ if and $width $height }}
+  {{ $string = print $width "x" $height }}
+{{ end }}
+
+{{ return $string }}

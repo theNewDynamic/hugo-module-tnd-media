@@ -1,0 +1,51 @@
+{{/*
+  GetNewDimensions
+  Calculate new width and or height based on given original height and/or width and new height and/or
+
+  @author @regisphilibert
+
+  @context Map
+    Int (.Width)
+    Int (.targetWidth)
+    Int (.Height)
+    Int (.targetHeight)
+
+  @access private
+
+  @returns Type
+
+  @uses
+     - partial
+
+  @example - Go Template
+    {{ with partialCached "GetNewDimensions" context context }}
+      {{ something = . }}
+    {{ end }}
+*/}}
+
+{{ $width := "" }}
+{{ $height := "" }}
+{{ with .targetWidth }}
+  {{ $width = . }}
+{{ end }}
+{{ with .targetHeight }}
+  {{ $height = . }}
+{{ end }}
+
+{{ if not (and $width $height) }}
+  {{ $ratio := div 3 6 }}
+    {{ warnf "width:%#v height:%#v ratio:%#v" $.width $.height $ratio }}
+  {{ if false }}
+    
+
+  {{ with $height }}
+    {{ $width = mul $.width $ratio }}
+  {{ end }}
+  {{ with $width }}
+    {{ $height = div $.height $ratio }}
+    {{ warnf "originalWidth:%#v width:%#v ratio:%#v" $.width $width $ratio }}
+  {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ return dict "Height" $height "Width" $width }}

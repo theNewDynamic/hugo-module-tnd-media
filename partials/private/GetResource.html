@@ -1,0 +1,42 @@
+{{/*
+  GetResource
+  Gets a resource using applicable method based on storage
+
+  @author @regisphilibert
+
+  @context String (.) path
+
+  @access private
+
+  @returns Resource
+
+  @uses
+     - partial private/GetStorage
+
+  @example - Go Template
+    {{ with partialCached "GetResource" context context }}
+      {{ something = . }}
+    {{ end }}
+*/}}
+
+{{ $path := . }}
+{{ $resource := dict }}
+{{ with $path }}
+  {{ with $storage := partialCached "tnd-media/private/GetStorage" "GetStorage" }}
+    {{ if eq $storage "assets" }}
+      {{ with resources.Get $path }}
+        {{ $resource = . }}
+      {{ end }}
+    {{ else if eq $storage "bundle" }}}
+        {{ with $bundle := partialCached "tnd-media/private/GetBundle" $path }}
+          {{ $relative_path := replace $path $bundle.File.Dir "" }}
+          {{ $relative_path = trim $relative_path "/" }}
+          {{ with $bundle.Resources.GetMatch $relative_path }}
+            {{ $resource = . }}
+          {{ end }}
+        {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ return $resource }}

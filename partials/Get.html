@@ -1,0 +1,34 @@
+{{ $args := . }}
+{{ $s := newScratch }}
+{{ $s.Set "data" dict }}
+
+{{ $params := partialCached "tnd-media/private/ParseArgs" $args $args }}
+{{ $transformed := false }}
+{{ with $resource := partialCached "tnd-media/private/GetResource" $params.Path }}
+  {{ $s.SetInMap "data" "Name" .Name }}
+  {{ $s.SetInMap "data" "Path" $params.Path }}
+  {{ $s.SetInMap "data" "Permalink" .Permalink }}
+  {{ $s.SetInMap "data" "RelPermalink" .RelPermalink }}
+  {{ $s.SetInMap "data" "Width" .Width }}
+  {{ $s.SetInMap "data" "Storage" (partialCached "tnd-media/private/GetStorage" "GetStorage") }}
+
+  {{ with $options := $params.Options }}
+    {{ $args := dict
+      "path" $params.Path
+      "options" $params.Options
+      "resource" $resource
+    }}
+    {{ if partialCached "tnd-media/private/UseImgix" "UseImgix"}}
+      {{ $transformed = partialCached "tnd-media/private/transform/imgix" $args $args }}
+    {{ else }}
+      {{ $transformed = partialCached "tnd-media/private/transform/hugo" $args $args }}
+    {{ end }}
+    {{ with $transformed }}
+      {{ range $key, $value := .}}
+        {{ $s.SetInMap "data" $key $value }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ return $s.Get "data" }}

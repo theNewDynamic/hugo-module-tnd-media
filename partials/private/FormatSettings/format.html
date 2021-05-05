@@ -1,0 +1,38 @@
+{{/*
+  options/format
+  Description
+
+  @author @regisphilibert
+
+  @context Type (.name)
+
+  @access private
+
+  @returns Type
+
+  @uses
+     - partial
+
+imgix available formats: 
+gif, jp2, jpg, json, jxr, pjpg, mp4, png, png8, png32, webm, webp,
+
+hugo available formats:
+jpg, png, tif, bmp, gif and webp.
+
+{{ $args := dict
+"src" "/uploads/something.jpg"
+"format" "jpg"
+}} > "jpg"
+
+{{ $args := dict
+"src" "/uploads/something.jpg"
+"format" "webp"
+}} > "webp"
+
+*/}}
+{{ $string := "" }}
+{{ with $.format }}
+  {{ $string = . }}
+{{ end }}
+
+{{ return $string }}

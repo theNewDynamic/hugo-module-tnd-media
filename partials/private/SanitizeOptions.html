@@ -1,0 +1,32 @@
+{{/*
+  SanitizeOptions
+  Removes from the argument the `src` or `path` key and return
+
+  @author @regisphilibert
+
+  @context Type (.name)
+
+  @access private
+
+  @returns Type
+
+  @uses
+     - partial
+
+  @example - Go Template
+    {{ with partialCached "IsolateOptions" context context }}
+      {{ something = . }}
+    {{ end }}
+*/}}
+{{ $options := . }}
+{{ $s := newScratch }}
+{{ $s.Set "data" dict }}
+{{ if reflect.IsMap . }}
+  {{ range $key, $value := . }}
+    {{ if ne $key "src" "path" }}
+      {{ $s.SetInMap "data" $key $value }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ return $s.Get "data" }}

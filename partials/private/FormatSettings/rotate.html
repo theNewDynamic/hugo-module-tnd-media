@@ -1,0 +1,28 @@
+{{/*
+  options/rotate
+  Description
+
+  @author @regisphilibert
+
+  @context Type (.name)
+
+  @access private
+
+  @returns Type
+
+  @uses
+     - partial
+
+{{ $args := dict
+"src" "/uploads/something.jpg"
+"quality" "90"
+}} > "q90"
+
+*/}}
+
+{{ $string := "" }}
+{{ with $.rotate }}
+  {{ $string = print "r" . }}
+{{ end }}
+
+{{ return $string }}

@@ -1,0 +1,32 @@
+{{/*
+  ParseArgs
+  Retrieve .path and .options from given map
+
+  @author @regisphilibert
+
+  @context Map (.)
+
+  @access private
+
+  @returns Map
+    String (.Path)
+    Map (.Options)
+
+  @uses
+     - partial
+
+*/}}
+
+{{ $path := $ }}
+{{ $options := dict }}
+{{ if reflect.IsMap $ }}
+  {{ with .src }}
+    {{ $path = . }}
+  {{ end }}
+  {{ with .path }}
+    {{ $path = . }}
+  {{ end }}
+  {{ $options = partialCached "tnd-media/private/SanitizeOptions" $ $}}
+{{ end }}
+
+{{ return dict "Path" $path "Options" $options }}
