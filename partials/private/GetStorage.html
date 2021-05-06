@@ -21,10 +21,7 @@
 
 {{ $config := partialCached "tnd-media/private/GetConfig" "GetConfig" }}
 
-{{ $storage := dict 
-  "type" "assets"
-  "path" "/uploads"
-}}
+{{ $storage := "assets" }}
 
 {{ with $config.storage }}
   {{ $storage = . }}

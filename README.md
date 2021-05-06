@@ -32,9 +32,49 @@ module:
 
 ## Usage
 
-### Some Partial/Feature
+### API
+
+The data returned by the following map is:
+
+- .Name
+- .Path
+- .Permalink
+- .RelPermalink
+- .Width ?
+- .Height ?
+
+### Get
+
+The only available public returning partial is `Get`.
+
+It returns the above structured data of the potentially transformed image.
+
+This takes two types of arguments.
+- A file path | String (.)
+  With the above, the function simply returns some data on the image.
+- A map | Map (.)
+  path: A file path | String
+  ...any other key will match a transformation from the hugo or other service API and its value the property to be passed.
+  With the above, the function returns the data of the transformed media.
 
 #### Examples
+```
+{{ $path := "/uploads/an-image.jpg" }}
+{{ with partial "tnd-media/Get" $path }}
+  {{ $url = .RelPermalink }}
+{{ end }}
+```
+
+```
+{{ $args := dict 
+  "path" "/uploads/an-image.jpg" 
+  "width" 1024 
+  "height" 100 
+}}
+{{ with partial "tnd-imgix/Get" $args }}
+  {{ $url = .RelPermalink }}
+{{ end }}
+```
 
 ### Settings
 
@@ -44,16 +84,18 @@ Settings are added to the project's parameter under the `tnd_media` map as shown
 # config.yaml
 params:
   tnd_media:
-    [...]
+    storage: bundle
 ```
 
-#### Configure Key 1
+#### storage
 
-#### Configure Key 2
+When an image is referenced as `/uploads/image.jpg` the module needs ot know if it leaves in the project's assets under `/assets/uploads/image.jpg` or in a headless bundle at `content/uploads/image.jpg`
 
-#### Defaults
+- bundle
+- assets
+- static
 
-ld copy/paste the above to your settings and append with new extensions.
+Note that no transformation is available if the storage is static.
 
 ## theNewDynamic
 

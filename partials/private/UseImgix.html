@@ -1,7 +1,22 @@
+{{/*
+  UseImgix
+  Determine if the project as imgix setup through the imgix module
+
+  @author @regisphilibert
+
+  @context Any (.)
+
+  @access private
+
+  @returns Bool
+
+  @uses
+     - tnd-imgix/private/GetConfig
+*/}}
 {{ $imgix := false }}
 {{ $config := partialCached "tnd-imgix/private/GetConfig" "GetConfig" }}
 {{ with $config.domain }}
   {{ $imgix = true }}
 {{ end }}
-{{ $imgix = false }}
+
 {{ return $imgix }}

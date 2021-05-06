@@ -1,6 +1,10 @@
 {{/*
   transform/hugo
   Will return a string matching a method name given a map of options
+  If we have width and !height > .Resize 
+  If we have height and !width > .Resize
+  If we have height and width and !crop > .Fit
+  If we have height and width and crop > .Fill 
 
   @author @regisphilibert
 
@@ -9,15 +13,7 @@
   @access private
 
   @returns String (fill|fit|resize)
-
-  @uses
-     - partial
-
-  @logic
-  If we have width and !height > .Resize 
-  If we have height and !width > .Resize
-  If we have height and width and !crop > .Fit
-  If we have height and width and crop > .Fill 
+  
 */}}
 
 {{ $method := "" }}

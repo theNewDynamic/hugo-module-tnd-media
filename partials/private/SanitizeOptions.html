@@ -1,22 +1,15 @@
 {{/*
   SanitizeOptions
-  Removes from the argument the `src` or `path` key and return
+  Returns the map without the src or path key
 
   @author @regisphilibert
 
-  @context Type (.name)
+  @context Map
 
   @access private
 
-  @returns Type
+  @returns Map
 
-  @uses
-     - partial
-
-  @example - Go Template
-    {{ with partialCached "IsolateOptions" context context }}
-      {{ something = . }}
-    {{ end }}
 */}}
 {{ $options := . }}
 {{ $s := newScratch }}

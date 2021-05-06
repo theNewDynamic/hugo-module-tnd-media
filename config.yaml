@@ -6,3 +6,5 @@ module:
     target: layouts/partials/tnd-media
   - source: console
     target: layouts/partials/tnd-media
+  imports:
+  - path: github.com/theNewDynamic/hugo-module-tnd-imgix
