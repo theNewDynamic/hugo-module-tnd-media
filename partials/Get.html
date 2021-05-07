@@ -1,48 +1,48 @@
 {{ $args := . }}
-{{ $s := newScratch }}
-{{ $s.Set "data" dict }}
+
 {{ $storage := partialCached "tnd-media/private/GetStorage" "GetStorage" }}
 {{ $params := partialCached "tnd-media/private/ParseArgs" $args $args }}
 {{ $transformed := false }}
+{{ $resource := dict }}
+
+{{ $s := newScratch }}
+{{ $s.Set "data" dict }}
+
+{{/* We set the default image data available from Path */}}
+{{ $file := path.Split $params.Path }}
+{{ $s.SetInMap "data" "Name" $file.File }}
+{{ $s.SetInMap "data" "Path" $params.Path }}
+{{ $s.SetInMap "data" "Permalink" (absURL $params.Path ) }}
+{{ $s.SetInMap "data" "RelPermalink" (relURL $params.Path) }}
+
+{{ $s.SetInMap "data" "Storage" $storage }}
+
+{{/* If storage is not static, 
+  we attempt to find a hugo.Resource matching the path. */}}
 {{ if ne $storage "static" }}
-  {{ with $resource := partialCached "tnd-media/private/GetResource" $params.Path }}
+  {{ with partialCached "tnd-media/private/GetResource" $params.Path $params.Path }}
+    {{ $resource = . }}
     {{ $s.SetInMap "data" "Name" .Name }}
-    {{ $s.SetInMap "data" "Path" $params.Path }}
     {{ $s.SetInMap "data" "Permalink" .Permalink }}
     {{ $s.SetInMap "data" "RelPermalink" .RelPermalink }}
     {{ $s.SetInMap "data" "Width" .Width }}
-    {{ $s.SetInMap "data" "Storage" (partialCached "tnd-media/private/GetStorage" "GetStorage") }}
-
-    {{ with $options := $params.Options }}
-      {{ $args := dict
-        "path" $params.Path
-        "options" $params.Options
-        "resource" $resource
-      }}
-      {{ if partialCached "tnd-media/private/UseImgix" "UseImgix"}}
-        {{ $transformed = partialCached "tnd-media/private/transform/imgix" $args $args }}
-      {{ else }}
-        {{ $transformed = partialCached "tnd-media/private/transform/hugo" $args $args }}
-      {{ end }}
-      {{ with $transformed }}
-        {{ range $key, $value := .}}
-          {{ $s.SetInMap "data" $key $value }}
-        {{ end }}
-      {{ end }}
-    {{ end }}
-  {{ end }}
-{{ else }}
-  {{ $file := path.Split $params.Path }}
-  {{ $s.SetInMap "data" "Name" $file.File }}
-  {{ $s.SetInMap "data" "Path" $params.Path }}
-  {{ $s.SetInMap "data" "Permalink" (absURL $params.Path ) }}
-  {{ $s.SetInMap "data" "RelPermalink" (relURL $params.Path) }}
-  {{ $s.SetInMap "data" "storage" "static" }}
-  {{ with $params.Options }}
-    {{ partial "tnd-media/warn" (printf 
-`As you are using static storage for your medias, the image %s cannot be transformed.
-Please see documentation about Storage for transformation.` 
-    $file.File) }}
+    {{ $s.SetInMap "data" "Height" .Height }}
   {{ end }}
 {{ end }}
+
+{{/* If options are passed to the partial, we check for transformation */}}
+{{ with $options := $params.Options }}
+  {{ $args := dict
+    "path" $params.Path
+    "options" $params.Options
+    "resource" $resource
+  }}
+  {{ $transformed := partialCached "tnd-media/private/Transform" $args $params.Path $params.Options }}
+  {{ with $transformed }}
+    {{ range $key, $value := .}}
+      {{ $s.SetInMap "data" $key $value }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
 {{ return $s.Get "data" }}

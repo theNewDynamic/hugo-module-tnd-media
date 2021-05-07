@@ -2,22 +2,31 @@
   transform/hugo
   Will transorm an image using Hugo Image processing from a given list of transforms settings
 
-  @author @regisphilibert
-
-  @context Type (.name)
-
-  @access private
-
-  @returns Type
-
-  @uses
-     - partial
-
-  @logic
   If we have width and !height > .Resize 
   If we have height and !width > .Resize
   If we have height and width and !crop > .Fill
   If we have height and width and crop > .Fit 
+
+  @author @regisphilibert
+
+  @context Map
+    String (.path)
+    Map (.options)
+    Resource (.resource)
+
+  @access private
+
+  @uses
+     - tnd-media/private/FormatSettings
+     - tnd-media/private/GetTransformMethod
+
+  @return Map
+    String (.Permalink)
+    String (.RelPermalink)
+    String (.Width)
+    String (.Height)
+    String (.transform)
+
 */}}
 {{ $resource := "" }}
 
@@ -43,6 +52,5 @@
   {{ $s.SetInMap "data" "Height" $resource.Height }}
   {{ $s.SetInMap "data" "transform" (print "." (humanize $method) " " $settings) }}
 {{ end }}
-
 
 {{ return $s.Get "data" }}

@@ -1,0 +1,42 @@
+{{/*
+  Trandform
+  Returns data of an image transformed using the appropriate method
+  (imgix or Hugo for now)
+
+  @author @regisphilibert
+
+  @context Map
+    String (.path)
+    Map (.options)
+    Resource (.resource)?
+
+  @access private
+
+  @returns Type
+
+  @uses
+     - partial
+
+  @example - Go Template
+    {{ with partialCached "Trandform" context context }}
+      {{ something = . }}
+    {{ end }}
+*/}}
+{{ $transformed := dict }}
+{{ $imgix := partialCached "tnd-media/private/UseImgix" "UseImgix" }}
+
+{{ with $args := . }}
+  {{ if $imgix }}
+    {{ $transformed = partialCached "tnd-media/private/transform/imgix" $args $args.path $args.options }}
+  {{ else }}
+    {{ with $.resource }}
+      {{ $transformed = partialCached "tnd-media/private/transform/hugo" $args $args.path $args.options }}
+    {{ else }}
+      {{ partial "tnd-media/warn" (printf 
+  `You are attempting to apply Hugo image transformation on %s. 
+  It appears you are not using the proper storage method for that.` 
+    $.path) }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+{{ return $transformed }}

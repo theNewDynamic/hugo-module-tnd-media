@@ -1,3 +1,21 @@
+{{/*
+  transform/imgix
+  Will return the data (Permalink) of an image "transformed" using imgix rendering API.
+
+  @author @regisphilibert
+
+  @context Map (.name)
+
+  @access private
+
+  @returns Map
+    String (.Permalink)
+    String (.RelPermalink)
+
+  @uses
+     - tnd-imgix/GetSRC
+
+*/}}
 
 {{ $options := $.options }}
 {{ $resource := $.resource }}
