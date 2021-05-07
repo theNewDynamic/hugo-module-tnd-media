@@ -1,0 +1,25 @@
+{{/*
+  tnd-imgix/GetConfig
+  Overwrites tnd-imgix/GetConfig so params can be set through tnd_media param key.
+
+  @author @regisphilibert
+
+  @context Anything (.)
+
+  @access private
+
+  @return Map
+  
+*/}}
+{{ $config := dict }}
+{{ with site.Params.tnd_imgix }}
+  {{ $config = . }}
+{{ else }}
+  {{ with site.Params.tnd_media }}
+    {{ with .imgix }}
+      {{ $config = . }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ return $config }}

@@ -4,6 +4,8 @@ module:
   mounts:
   - source: partials
     target: layouts/partials/tnd-media
+  - source: tnd-imgix
+    target: layouts/partials/tnd-imgix
   - source: console
     target: layouts/partials/tnd-media
   imports:

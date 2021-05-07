@@ -19,5 +19,7 @@
 {{ with site.Params.tnd_media }}
   {{ $config = . }}
 {{ end }}
-
+{{ with site.Params.tnd_imgix }}
+  {{ $config = merge $config (dict "imgix" .) }}
+{{ end }}
 {{ return $config }}
