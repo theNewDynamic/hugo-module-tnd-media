@@ -15,8 +15,11 @@
 */}}
 {{ $imgix := false }}
 {{ $config := partialCached "tnd-imgix/private/GetConfig" "GetConfig" }}
-{{ with $config.domain }}
-  {{ $imgix = true }}
+{{ if not $config.disable }}
+  {{ with $config.domain }}
+    {{ $imgix = true }}
+  {{ end }}
 {{ end }}
+
 
 {{ return $imgix }}
