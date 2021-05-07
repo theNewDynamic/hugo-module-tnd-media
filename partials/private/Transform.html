@@ -30,7 +30,9 @@
     {{ $transformed = partialCached "tnd-media/private/transform/imgix" $args $args.path $args.options }}
   {{ else }}
     {{ with $.resource }}
-      {{ $transformed = partialCached "tnd-media/private/transform/hugo" $args $args.path $args.options }}
+      {{ if eq .MediaType.MainType "image" }}
+        {{ $transformed = partialCached "tnd-media/private/transform/hugo" $args $args.path $args.options }}
+      {{ end }}
     {{ else }}
       {{ partial "tnd-media/warn" (printf 
   `You are attempting to apply Hugo image transformation on %s. 

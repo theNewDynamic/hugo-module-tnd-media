@@ -11,10 +11,10 @@
 {{/* We set the default image data available from Path */}}
 {{ $file := path.Split $params.Path }}
 {{ $s.SetInMap "data" "Name" $file.File }}
+{{ $s.SetInMap "data" "Extension" (path.Ext $params.Path | strings.TrimLeft ".") }}
 {{ $s.SetInMap "data" "Path" $params.Path }}
 {{ $s.SetInMap "data" "Permalink" (absURL $params.Path ) }}
 {{ $s.SetInMap "data" "RelPermalink" (relURL $params.Path) }}
-
 {{ $s.SetInMap "data" "Storage" $storage }}
 
 {{/* If storage is not static, 
@@ -25,8 +25,16 @@
     {{ $s.SetInMap "data" "Name" .Name }}
     {{ $s.SetInMap "data" "Permalink" .Permalink }}
     {{ $s.SetInMap "data" "RelPermalink" .RelPermalink }}
-    {{ $s.SetInMap "data" "Width" .Width }}
-    {{ $s.SetInMap "data" "Height" .Height }}
+    {{ $s.SetInMap "data" "Type" .MediaType.MainType }}
+    {{ $s.SetInMap "data" "SubType" .MediaType.SubType }}
+    {{ if eq .MediaType.MainType "image" }}
+      {{ with .Width }}
+        {{ $s.SetInMap "data" "Width" . }}
+      {{ end }}
+      {{ with .Height }}
+        {{ $s.SetInMap "data" "Height" . }}
+      {{ end }}
+    {{ end }}
   {{ end }}
 {{ end }}
 
