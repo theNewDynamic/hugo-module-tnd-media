@@ -89,13 +89,32 @@ params:
 
 #### storage
 
-When an image is referenced as `/uploads/image.jpg` the module needs ot know if it leaves in the project's assets under `/assets/uploads/image.jpg` or in a headless bundle at `content/uploads/image.jpg`
+When an image is referenced as `/uploads/image.jpg` the module and its `Get` function needs to know if it lives in the project's assets under `/assets/uploads/image.jpg` or in a headless bundle at `content/uploads/image.jpg` or in the static directory `/static/uploads/image.jpg`.
 
 - bundle
 - assets
 - static
 
-Note that no transformation is available if the storage is static.
+Note that while `bundle` and `assets` can both do Hugo image processing, `static` images cannot and will need imgix to be setup in order to be "transformed".
+
+#### Imgix
+
+On top of using the built-in Hugo image transformation abilitym, the Module can also use the power of [TND Imgix](https://github.com/theNewDynamic/hugo-module-tnd-imgix).
+
+Note that using imgix, image transformed with the `Get` function will not return any `Width` or `Height`
+
+##### Set Up
+In order to use imgix, you just need to set a imgix domain.
+
+```yaml
+params:
+  tnd_media:
+    imgix:
+      domain: imgix.project.net
+# That's it 🎉
+```
+
+For more advanced imgix configuration, head to the upstream documentation from [TND Imgix](https://github.com/theNewDynamic/hugo-module-tnd-imgix#settings) and store those keys alongside the above example under `params.tnd_media.imgix`
 
 ## theNewDynamic
 
