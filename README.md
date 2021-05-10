@@ -76,6 +76,25 @@ This takes two types of arguments.
 {{ end }}
 ```
 
+### Transformations
+
+While transformation are passed as parameter to the `Get` function, the Module can either use Hugo's built-in [Image processing solution](https://gohugo.io/content-management/image-processing/#readout) or [imgix](https://www.imgix.com/)
+
+While Hugo's built-in solution gives more than you usually need on any given project, imgix sports more transformations options.
+
+Available transformation options are:
+
+#### With Hugo or Imgix
+- width (int)
+- height (int)
+- crop (bool)
+- format (jpg|png|tif|bmp|gif|webp)
+- quality (int [0-100])
+- rotate (int [0-360])
+
+#### With Imgix
+All of the above plus any options available through their [Image rendering API](https://docs.imgix.com/apis/rendering) not listed above.
+
 ### Settings
 
 Settings are added to the project's parameter under the `tnd_media` map as shown below.
