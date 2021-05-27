@@ -39,17 +39,15 @@
 {{ end }}
 
 {{/* If options are passed to the partial, we check for transformation */}}
-{{ with $options := $params.Options }}
-  {{ $args := dict
-    "path" $params.Path
-    "options" $params.Options
-    "resource" $resource
-  }}
-  {{ $transformed := partialCached "tnd-media/private/Transform" $args $params.Path $params.Options }}
-  {{ with $transformed }}
-    {{ range $key, $value := .}}
-      {{ $s.SetInMap "data" $key $value }}
-    {{ end }}
+{{ $args := dict
+  "path" $params.Path
+  "options" $params.Options
+  "resource" $resource
+}}
+{{ $transformed := partialCached "tnd-media/private/Transform" $args $params.Path $params.Options }}
+{{ with $transformed }}
+  {{ range $key, $value := .}}
+    {{ $s.SetInMap "data" $key $value }}
   {{ end }}
 {{ end }}
 

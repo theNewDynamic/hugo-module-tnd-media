@@ -28,21 +28,24 @@
     String (.transform)
 
 */}}
-{{ $resource := "" }}
-
+{{ $resource := $.resource }}
 {{ $options := $.options }}
+
 {{ $s := newScratch }}
 {{ $s.Set "data" dict }}
+{{ $settings := "" }}
+{{ $method := "" }}
+{{ with $.options }}
+  {{ $settings = string (partialCached "tnd-media/private/FormatSettings" $.options $.options) }}
 
-{{ $settings := string (partialCached "tnd-media/private/FormatSettings" $.options $.options) }}
-
-{{ $method := partialCached "tnd-media/private/GetTransformMethod" $.options $.options }}
-{{ if eq $method "resize" }}
-  {{ $resource = $.resource.Resize $settings }}
-{{ else if eq $method "fit" }}
-  {{ $resource = $.resource.Fit $settings }}
-{{ else if eq $method "fill" }}
-  {{ $resource = $.resource.Fill $settings }}
+  {{ $method = partialCached "tnd-media/private/GetTransformMethod" $.options $.options }}
+  {{ if eq $method "resize" }}
+    {{ $resource = $.resource.Resize $settings }}
+  {{ else if eq $method "fit" }}
+    {{ $resource = $.resource.Fit $settings }}
+  {{ else if eq $method "fill" }}
+    {{ $resource = $.resource.Fill $settings }}
+  {{ end }}
 {{ end }}
 
 {{ with $resource }}
@@ -50,7 +53,9 @@
   {{ $s.SetInMap "data" "RelPermalink" $resource.RelPermalink }}
   {{ $s.SetInMap "data" "Width" $resource.Width }}
   {{ $s.SetInMap "data" "Height" $resource.Height }}
-  {{ $s.SetInMap "data" "transform" (print "." (humanize $method) " " $settings) }}
+  {{ with $settings }}
+    {{ $s.SetInMap "data" "transform" (print "." (humanize $method) " " $settings) }}
+  {{ end }}
 {{ end }}
 
 {{ return $s.Get "data" }}
