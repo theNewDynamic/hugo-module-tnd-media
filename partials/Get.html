@@ -27,7 +27,7 @@
     {{ $s.SetInMap "data" "RelPermalink" .RelPermalink }}
     {{ $s.SetInMap "data" "Type" .MediaType.MainType }}
     {{ $s.SetInMap "data" "SubType" .MediaType.SubType }}
-    {{ if eq .MediaType.MainType "image" }}
+    {{ if partial "tnd-media/private/IsResourceProcessable" $resource }}
       {{ with .Width }}
         {{ $s.SetInMap "data" "Width" . }}
       {{ end }}

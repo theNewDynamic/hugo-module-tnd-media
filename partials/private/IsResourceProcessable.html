@@ -1,0 +1,20 @@
+{{/*
+  IsResourceProcessable
+  Check if a resource is processable as an image. An svg as a MainType of "image" but cannot be transformed by Hugo.
+  Only, jpeg, png and webp can.
+
+  @author @regisphilibert
+
+  @context Resource (.)
+
+  @access private
+
+  @returns Bool
+
+*/}}
+{{ $return := false }}
+{{ if eq .MediaType.SubType "jpg" "jpeg" "png" "webp" }}
+  {{ $return = true }}
+{{ end }}
+
+{{ return $return }}

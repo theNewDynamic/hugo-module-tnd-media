@@ -23,19 +23,29 @@
 {{ $resource := dict }}
 {{ with $path }}
   {{ with $storage := partialCached "tnd-media/private/GetStorage" "GetStorage" }}
-    {{ if eq $storage "assets" }}
-      {{ with resources.Get $path }}
-        {{ $resource = . }}
-      {{ end }}
-    {{ else if eq $storage "bundle" }}
-        {{ $dir := (path.Split .).Dir }}
+    {{ if eq $storage "assets" "bundle" }}
+      {{ if eq $storage "assets" }}
+        {{ with resources.Get $path }}
+          {{ $resource = . }}
+        {{ end }}
+      {{ else if eq $storage "bundle" }}
+        {{ $path = trim $path "/" }}
+        {{ $dir := (path.Split $path).Dir }}
         {{ with $bundle := partialCached "tnd-media/private/GetBundle" $path $dir }}
+
           {{ $relative_path := replace $path $bundle.File.Dir "" }}
           {{ $relative_path = trim $relative_path "/" }}
           {{ with $bundle.Resources.GetMatch $relative_path }}
             {{ $resource = . }}
           {{ end }}
         {{ end }}
+      {{ end }}
+      {{/* If we could not find a matching resource even though Storage is assets or bundle, we warn the user: */}}
+      {{ with $resource }}{{ else }}
+        {{ partial "tnd-media/warn" (printf 
+        `We could not find a Hugo resource at %s`
+          $path) }}
+      {{ end }}
     {{ end }}
   {{ end }}
 {{ end }}

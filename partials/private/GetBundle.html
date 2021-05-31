@@ -34,6 +34,10 @@
     {{ with index $bundle_dirs 0 }}
       {{ with site.GetPage . }}
         {{ $bundle = . }}
+      {{ else }}
+       {{ with site.Sites.First.GetPage . }}
+        {{ $bundle = . }}
+       {{ end }}
       {{ end }}
     {{ end }}
   {{ end }}

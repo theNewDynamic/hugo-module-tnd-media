@@ -24,21 +24,24 @@
 */}}
 {{ $transformed := dict }}
 {{ $imgix := partialCached "tnd-media/private/UseImgix" "UseImgix" }}
-
+{{ $storage := partialCached "tnd-media/private/GetStorage" "GetStorage" }}
 {{ with $args := . }}
   {{ if $imgix }}
     {{ $transformed = partialCached "tnd-media/private/transform/imgix" $args $args.path $args.options }}
   {{ else }}
-    {{ with $.resource }}
-      {{ if eq .MediaType.MainType "image" }}
-        {{ $transformed = partialCached "tnd-media/private/transform/hugo" $args $args.path $args.options }}
+    {{ if eq $storage "bundle" "assets" }}
+      {{ with $.resource }}
+        {{ if partial "tnd-media/private/IsResourceProcessable" . }}
+          {{ $transformed = partialCached "tnd-media/private/transform/hugo" $args $args.path $args.options }}
+        {{ end }}
       {{ end }}
     {{ else }}
       {{ partial "tnd-media/warn" (printf 
-  `You are attempting to apply Hugo image transformation on %s. 
-  It appears you are not using the proper storage method for that.` 
-    $.path) }}
+      `You are attempting to apply Hugo image transformation on %s using a %s storage. 
+      You should use a 'bundle' or 'assets' storage for that.` 
+        $.path $storage) }}
     {{ end }}
   {{ end }}
 {{ end }}
+
 {{ return $transformed }}
