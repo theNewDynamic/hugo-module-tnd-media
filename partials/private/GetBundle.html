@@ -1,6 +1,11 @@
 {{/*
   GetBundle
-  Retrieve an Page Bundle given an full filepath.
+  Retrieve an Page Bundle given a filepath relative to content directory. For now it only targets the first directory of the path. 
+  
+  For example:
+    - /uploads/image.jpg 
+    - /uploads/subdir/image.jpg
+  Will both work if uploads/ is the bunlde (contains a the `index.md`) but will fail if the bunlde is `/uploads/subdir/`.
 
   @author @regisphilibert
 
@@ -24,9 +29,12 @@
 {{ with $path }}
   {{ $info := path.Split . }}
   {{ with $info.Dir }}
-    {{ $bundle_path := trim . "/" }}
-    {{ with site.GetPage $bundle_path }}
-      {{ $bundle = . }}
+    {{/* We retrieve the first directory of the path */}}
+    {{ $bundle_dirs := split . "/" }}
+    {{ with index $bundle_dirs 0 }}
+      {{ with site.GetPage . }}
+        {{ $bundle = . }}
+      {{ end }}
     {{ end }}
   {{ end }}
 {{ end }}

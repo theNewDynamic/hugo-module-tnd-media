@@ -27,8 +27,9 @@
       {{ with resources.Get $path }}
         {{ $resource = . }}
       {{ end }}
-    {{ else if eq $storage "bundle" }}}
-        {{ with $bundle := partialCached "tnd-media/private/GetBundle" $path }}
+    {{ else if eq $storage "bundle" }}
+        {{ $dir := (path.Split .).Dir }}
+        {{ with $bundle := partialCached "tnd-media/private/GetBundle" $path $dir }}
           {{ $relative_path := replace $path $bundle.File.Dir "" }}
           {{ $relative_path = trim $relative_path "/" }}
           {{ with $bundle.Resources.GetMatch $relative_path }}
