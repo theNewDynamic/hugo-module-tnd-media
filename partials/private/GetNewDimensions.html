@@ -1,51 +1,51 @@
 {{/*
   GetNewDimensions
-  Calculate new width and or height based on given original height and/or width and new height and/or
+  Calculate new width and or height based on given original height and width and target height and/or width
 
   @author @regisphilibert
 
   @context Map
-    Int (.Width)
+    Int (.originalWidth)
     Int (.targetWidth)
-    Int (.Height)
+    Int (.originalHeight)
     Int (.targetHeight)
 
   @access private
 
-  @returns Type
+  @returns Map
+    Int (.Width)
+    Int (.Height)
 
-  @uses
-     - partial
-
-  @example - Go Template
-    {{ with partialCached "GetNewDimensions" context context }}
-      {{ something = . }}
-    {{ end }}
 */}}
 
-{{ $width := "" }}
-{{ $height := "" }}
+{{ $width := .originalWidth }}
+{{ $height := .originalHeight }}
+{{ $updateDimensions := false }}
+
+
 {{ with .targetWidth }}
   {{ $width = . }}
+  {{ $updateDimensions = true }}
 {{ end }}
 {{ with .targetHeight }}
   {{ $height = . }}
+  {{ $updateDimensions = true }}
 {{ end }}
 
-{{ if not (and $width $height) }}
-  {{ $ratio := div 3 6 }}
-    {{ warnf "width:%#v height:%#v ratio:%#v" $.width $.height $ratio }}
-  {{ if false }}
+{{ if (and .targetWidth .targetHeight) }}
+  {{ $updateDimensions = false }}
+{{ end }}
+
+{{ if $updateDimensions }}
+  {{ $ratio := div (float .originalWidth) (float .originalHeight) }}
     
-
-  {{ with $height }}
-    {{ $width = mul $.width $ratio }}
+  {{ with .targetHeight }}
+    {{ $width = mul . $ratio | math.Ceil }}
   {{ end }}
-  {{ with $width }}
-    {{ $height = div $.height $ratio }}
-    {{ warnf "originalWidth:%#v width:%#v ratio:%#v" $.width $width $ratio }}
-  {{ end }}
+  {{ with .targetWidth }}
+    {{ $height = div . $ratio | math.Ceil }}
   {{ end }}
 {{ end }}
+
 
 {{ return dict "Height" $height "Width" $width }}

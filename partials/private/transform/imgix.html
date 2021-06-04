@@ -27,29 +27,30 @@
   {{ $s.SetInMap "data" "Permalink" . }}
   {{ $s.SetInMap "data" "RelPermalink" . }}
 {{ end }}
-{{/* Not ready for this yet... */}}
-{{ if false }}
-  {{ with $resource = $.resource }}
-    {{ $targetWidth := "" }}
-    {{ $targetHeight := "" }}
-    {{ with $options.width }}
-      {{ $targetWidth = . }}
-    {{ end }}
-    {{ with $options.height }}
-      {{ $targetHeight = . }}
-    {{ end }}
-    {{ $dimArgs := dict
-      "width" $resource.Width
-      "height" $resource.Height
-      "targetWidth" $targetWidth
-      "targetHeight" $targetHeight
-    }}
-    {{ with partialCached "tnd-media/private/GetNewDimensions" $dimArgs $dimArgs }}
-      {{ $s.SetInMap "data" "Width" .Width }}
-      {{ $s.SetInMap "data" "Height" .Height }}
+
+{{ with $resource = $.resource }}
+  {{ if partialCached "tnd-media/private/IsResourceProcessable" . $.path }}
+    {{ if or $.options.width $.options.height }}
+      {{ $targetWidth := "" }}
+      {{ $targetHeight := "" }}
+      {{ with $options.width }}
+        {{ $targetWidth = . }}
+      {{ end }}
+      {{ with $options.height }}
+        {{ $targetHeight = . }}
+      {{ end }}
+      {{ $dimArgs := dict
+        "originalWidth" $resource.Width
+        "originalHeight" $resource.Height
+        "targetWidth" $targetWidth
+        "targetHeight" $targetHeight
+      }}
+      {{ with partialCached "tnd-media/private/GetNewDimensions" $dimArgs $dimArgs }}
+        {{ $s.SetInMap "data" "Width" .Width }}
+        {{ $s.SetInMap "data" "Height" .Height }}
+      {{ end }}
     {{ end }}
   {{ end }}
-  
 {{ end }}
-
+  
 {{ return $s.Get "data" }}
