@@ -1,11 +1,3 @@
-This is a template repo. To start.
-
-search `media` through the project and replace it with the module identifier (ex: `socials` for `hugo-module-tnd-socials`)
-
-# media Hugo Module
-
-(intro)
-
 ## Requirements
 
 Requirements:
