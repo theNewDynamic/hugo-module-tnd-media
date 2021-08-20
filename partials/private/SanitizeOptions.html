@@ -16,7 +16,7 @@
 {{ $s.Set "data" dict }}
 {{ if reflect.IsMap . }}
   {{ range $key, $value := . }}
-    {{ if ne $key "src" "path" }}
+    {{ if ne $key "src" "path" "public" }}
       {{ $s.SetInMap "data" $key $value }}
     {{ end }}
   {{ end }}

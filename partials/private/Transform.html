@@ -32,7 +32,7 @@
     {{ if eq $storage "bundle" "assets" }}
       {{ with $.resource }}
         {{ if partial "tnd-media/private/IsResourceProcessable" . }}
-          {{ $transformed = partialCached "tnd-media/private/transform/hugo" $args $args.path $args.options }}
+          {{ $transformed = partialCached "tnd-media/private/transform/hugo" $args $args.path $args.public $args.options }}
         {{ end }}
       {{ end }}
     {{ else }}

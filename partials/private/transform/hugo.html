@@ -11,6 +11,7 @@
 
   @context Map
     String (.path)
+    String (.public)
     Map (.options)
     Resource (.resource)
 
@@ -35,20 +36,27 @@
 {{ $s.Set "data" dict }}
 {{ $settings := "" }}
 {{ $method := "" }}
+
+  {{/* We use Concat to set the published path of the resource */}}
+  {{ with $.public }}
+    {{ $resource = (slice $resource) | resources.Concat . }}
+  {{ end }}
+
 {{ with $.options }}
   {{ $settings = string (partialCached "tnd-media/private/FormatSettings" $.options $.options) }}
 
   {{ $method = partialCached "tnd-media/private/GetTransformMethod" $.options $.options }}
   {{ if eq $method "resize" }}
-    {{ $resource = $.resource.Resize $settings }}
+    {{ $resource = $resource.Resize $settings }}
   {{ else if eq $method "fit" }}
-    {{ $resource = $.resource.Fit $settings }}
+    {{ $resource = $resource.Fit $settings }}
   {{ else if eq $method "fill" }}
-    {{ $resource = $.resource.Fill $settings }}
+    {{ $resource = $resource.Fill $settings }}
   {{ end }}
 {{ end }}
 
 {{ with $resource }}
+
   {{ $s.SetInMap "data" "Permalink" $resource.Permalink }}
   {{ $s.SetInMap "data" "RelPermalink" $resource.RelPermalink }}
   {{ $s.SetInMap "data" "Width" $resource.Width }}
