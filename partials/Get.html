@@ -42,9 +42,10 @@
 {{ $args := dict
   "path" $params.Path
   "options" $params.Options
+  "service" $params.Service
   "resource" $resource
 }}
-{{ $transformed := partialCached "tnd-media/private/Transform" $args $params.Path $params.Options }}
+{{ $transformed := partialCached "tnd-media/private/Transform" $args $params.Path $params.Options $params.Service }}
 {{ with $transformed }}
   {{ range $key, $value := .}}
     {{ $s.SetInMap "data" $key $value }}

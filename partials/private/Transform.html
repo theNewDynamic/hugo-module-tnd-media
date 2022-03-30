@@ -23,9 +23,19 @@
     {{ end }}
 */}}
 {{ $transformed := dict }}
-{{ $imgix := partialCached "tnd-media/private/UseImgix" "UseImgix" }}
+{{ $imgix := false }}
+
 {{ $storage := partialCached "tnd-media/private/GetStorage" "GetStorage" }}
+
 {{ with $args := . }}
+  {{ with $.service }}
+    {{ if eq . "imgix" }}
+      {{ $imgix = true }}
+    {{ end }}
+  {{ else }}
+    {{ $imgix = partialCached "tnd-media/private/UseImgix" "UseImgix" }}
+  {{ end }}
+
   {{ if $imgix }}
     {{ $transformed = partialCached "tnd-media/private/transform/imgix" $args $args.path $args.options }}
   {{ else }}
