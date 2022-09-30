@@ -34,6 +34,11 @@
       {{ with .Height }}
         {{ $s.SetInMap "data" "Height" . }}
       {{ end }}
+      {{ if gt hugo.Version "0.104.0" }}
+        {{ with .Colors }}
+          {{ $s.SetInMap "data" "Colors" . }}
+        {{ end }}
+      {{ end }}
     {{ end }}
   {{ end }}
 {{ end }}
