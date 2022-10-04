@@ -34,10 +34,10 @@
       {{ $targetWidth := "" }}
       {{ $targetHeight := "" }}
       {{ with $options.width }}
-        {{ $targetWidth = . }}
+        {{ $targetWidth = float . }}
       {{ end }}
       {{ with $options.height }}
-        {{ $targetHeight = . }}
+        {{ $targetHeight = float . }}
       {{ end }}
       {{ $dimArgs := dict
         "originalWidth" $resource.Width
